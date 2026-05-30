@@ -1,0 +1,655 @@
+[
+  {
+    "id": "item_f_w01", "name": "Punho de Brasa", "type": "weapon", "element": "Fogo",
+    "minLevel": 1, "rarity": "common", "price": 80,
+    "stats": { "attack": 6, "defense": 0, "chi": 0, "hp": 0 },
+    "passiveEffect": "burn_on_attack",
+    "passiveDescription": "Seus ataques físicos aplicam Queimadura (-4 HP/turno por 2 turnos).",
+    "description": "Luvas básicas revestidas de carvão ativado. Esquenta a cada golpe."
+  },
+  {
+    "id": "item_f_w02", "name": "Lança de Ozai", "type": "weapon", "element": "Fogo",
+    "minLevel": 12, "rarity": "rare", "price": 700,
+    "stats": { "attack": 18, "defense": 2, "chi": 0, "hp": 0 },
+    "passiveEffect": "fire_skill_bonus",
+    "passiveDescription": "Skills de Fogo causam +12% de dano adicional.",
+    "description": "Réplica da lança usada pelo Senhor do Fogo Ozai em batalha."
+  },
+  {
+    "id": "item_f_w03", "name": "Espada de Chama Azul", "type": "weapon", "element": "Fogo",
+    "minLevel": 28, "rarity": "epic", "price": 3500,
+    "stats": { "attack": 30, "defense": 5, "chi": 0, "hp": 0 },
+    "passiveEffect": "stun_chance_25",
+    "passiveDescription": "Ataques físicos têm 25% de chance de aplicar Stun por 1 turno.",
+    "description": "Espada que conduz chamas azuis em seu fio. Forjada na Ilha da Chama."
+  },
+  {
+    "id": "item_f_a01", "name": "Escudo das Chamas", "type": "armor", "element": "Fogo",
+    "minLevel": 3, "rarity": "common", "price": 120,
+    "stats": { "attack": 2, "defense": 5, "chi": 0, "hp": 0 },
+    "passiveEffect": "return_damage_5",
+    "passiveDescription": "Devolve 5 de dano fixo a qualquer atacante que te acertar.",
+    "description": "Protetor de ombro forjado em aço vulcânico. Queima quem toca."
+  },
+  {
+    "id": "item_f_a02", "name": "Armadura do Coronel", "type": "armor", "element": "Fogo",
+    "minLevel": 18, "rarity": "rare", "price": 1200,
+    "stats": { "attack": 5, "defense": 20, "chi": 0, "hp": 0 },
+    "passiveEffect": "immune_burn",
+    "passiveDescription": "Imune ao efeito de Queimadura de qualquer fonte.",
+    "description": "Armadura completa da elite da Nação do Fogo. Resiste às próprias chamas."
+  },
+  {
+    "id": "item_f_a03", "name": "Armadura do Senhor do Fogo", "type": "armor", "element": "Fogo",
+    "minLevel": 35, "rarity": "legendary", "price": 8000,
+    "stats": { "attack": 20, "defense": 35, "chi": 20, "hp": 0 },
+    "passiveEffect": "global_damage_reduction_10",
+    "passiveDescription": "Reduz todos os danos recebidos em 10% (antes da defesa).",
+    "description": "A armadura completa do Senhor do Fogo. Exala poder absoluto e medo."
+  },
+  {
+    "id": "item_f_am01", "name": "Amuleto da Labareda", "type": "amulet", "element": "Fogo",
+    "minLevel": 5, "rarity": "uncommon", "price": 200,
+    "stats": { "attack": 4, "defense": 0, "chi": 5, "hp": 0 },
+    "passiveEffect": "ultimate_bonus_20",
+    "passiveDescription": "Skills ULTIMATE de Fogo causam +20% de dano adicional.",
+    "description": "Cristal vermelho que amplifica o chi de fogo. Pulsa com cada batida do coração."
+  },
+  {
+    "id": "item_f_am02", "name": "Coroa de Azula", "type": "amulet", "element": "Fogo",
+    "minLevel": 22, "rarity": "epic", "price": 2000,
+    "stats": { "attack": 15, "defense": 0, "chi": 15, "hp": 0 },
+    "passiveEffect": "start_with_fury_charge",
+    "passiveDescription": "Começa cada batalha com 1 carga de Fúria já preenchida.",
+    "description": "A coroa da princesa, irradiando poder azul e autoridade absoluta."
+  },
+  {
+    "id": "item_f_ac01", "name": "Luvas de Treinamento do Fogo", "type": "accessory", "element": "Fogo",
+    "minLevel": 1, "rarity": "common", "price": 60,
+    "stats": { "attack": 3, "defense": 0, "chi": 0, "hp": 0 },
+    "passiveEffect": "exp_bonus_10",
+    "passiveDescription": "Ganha +10% de EXP em batalhas.",
+    "description": "Usadas pelos soldados durante treinamento intensivo da Nação do Fogo."
+  },
+  {
+    "id": "item_f_ac02", "name": "Cinturão do General", "type": "accessory", "element": "Fogo",
+    "minLevel": 20, "rarity": "rare", "price": 950,
+    "stats": { "attack": 8, "defense": 5, "chi": 0, "hp": 0 },
+    "passiveEffect": "win_streak_defense",
+    "passiveDescription": "+8 DEF por vitória consecutiva (acumula até 3 vitórias, reseta ao perder).",
+    "description": "O cinturão dos generais da Nação do Fogo, símbolo de vitórias acumuladas."
+  },
+
+  {
+    "id": "item_a_w01", "name": "Cajado de Bambu", "type": "weapon", "element": "Água",
+    "minLevel": 1, "rarity": "common", "price": 80,
+    "stats": { "attack": 5, "defense": 1, "chi": 0, "hp": 0 },
+    "passiveEffect": "heal_on_water_skill",
+    "passiveDescription": "Ao usar qualquer skill de Água, recupera 5 HP.",
+    "description": "Cajado leve usado pelos curandeiros da Tribo da Água. Imbuído com energia espiritual."
+  },
+  {
+    "id": "item_a_w02", "name": "Lâmina de Gelo", "type": "weapon", "element": "Água",
+    "minLevel": 15, "rarity": "rare", "price": 850,
+    "stats": { "attack": 20, "defense": 0, "chi": 0, "hp": 0 },
+    "passiveEffect": "freeze_chance_30",
+    "passiveDescription": "Ataques básicos têm 30% de chance de aplicar Congelamento por 1 turno.",
+    "description": "Fio de água congelada afixado em aço. Nunca derrete, não importa o calor."
+  },
+  {
+    "id": "item_a_w03", "name": "Bastão de Pakku", "type": "weapon", "element": "Água",
+    "minLevel": 28, "rarity": "epic", "price": 3800,
+    "stats": { "attack": 28, "defense": 0, "chi": 12, "hp": 0 },
+    "passiveEffect": "water_cooldown_minus1",
+    "passiveDescription": "Reduz o cooldown de todas as skills de Água em 1 turno.",
+    "description": "O bastão do Grão-Mestre Pakku. Cada golpe carrega a experiência de décadas."
+  },
+  {
+    "id": "item_a_a01", "name": "Manto Aquático", "type": "armor", "element": "Água",
+    "minLevel": 3, "rarity": "common", "price": 110,
+    "stats": { "attack": 0, "defense": 6, "chi": 0, "hp": 0 },
+    "passiveEffect": "regen_3_hp_per_turn",
+    "passiveDescription": "Recupera 3 HP no início de cada turno.",
+    "description": "Capa tecida com fibras marinhas. A água flui através dela como se viva."
+  },
+  {
+    "id": "item_a_a02", "name": "Escudo de Água Sólida", "type": "armor", "element": "Água",
+    "minLevel": 12, "rarity": "rare", "price": 680,
+    "stats": { "attack": 0, "defense": 22, "chi": 0, "hp": 0 },
+    "passiveEffect": "absorb_first_hit",
+    "passiveDescription": "Absorve completamente o primeiro ataque de cada batalha (zero dano).",
+    "description": "Armadura criada por Katara durante a Batalha da Baía. Água endurecida como aço."
+  },
+  {
+    "id": "item_a_a03", "name": "Armadura das Profundezas", "type": "armor", "element": "Água",
+    "minLevel": 35, "rarity": "legendary", "price": 8500,
+    "stats": { "attack": 12, "defense": 38, "chi": 15, "hp": 0 },
+    "passiveEffect": "immune_freeze",
+    "passiveDescription": "Imune ao efeito de Congelamento de qualquer fonte.",
+    "description": "Forjada no fundo do Oceano do Espírito. Carrega o peso e a calma das profundezas."
+  },
+  {
+    "id": "item_a_am01", "name": "Colar de Yue", "type": "amulet", "element": "Água",
+    "minLevel": 22, "rarity": "epic", "price": 2200,
+    "stats": { "attack": 8, "defense": 0, "chi": 22, "hp": 0 },
+    "passiveEffect": "heal_skill_bonus_10",
+    "passiveDescription": "Skills de cura recuperam +10% de HP adicional.",
+    "description": "Relíquia da Princesa Yue, protegida pelo Espírito da Lua. Pulsa com luz prateada."
+  },
+  {
+    "id": "item_a_am02", "name": "Amuleto da Lua", "type": "amulet", "element": "Água",
+    "minLevel": 5, "rarity": "uncommon", "price": 220,
+    "stats": { "attack": 3, "defense": 0, "chi": 8, "hp": 0 },
+    "passiveEffect": "chi_regen_plus3",
+    "passiveDescription": "Regenera +3 Chi adicional por turno (além do valor normal).",
+    "description": "Fragmento de cristal do Oásis do Espírito. Brilha mais forte à noite."
+  },
+  {
+    "id": "item_a_ac01", "name": "Faixas dos Guerreiros da Água", "type": "accessory", "element": "Água",
+    "minLevel": 4, "rarity": "uncommon", "price": 180,
+    "stats": { "attack": 2, "defense": 3, "chi": 3, "hp": 0 },
+    "passiveEffect": "water_effect_chance_plus15",
+    "passiveDescription": "Skills de Água têm +15% de chance de aplicar seus efeitos de status.",
+    "description": "Faixas tradicionais usadas pelos guerreiros da Tribo da Água do Sul."
+  },
+  {
+    "id": "item_a_ac02", "name": "Brincos do Polo Norte", "type": "accessory", "element": "Água",
+    "minLevel": 18, "rarity": "rare", "price": 1100,
+    "stats": { "attack": 0, "defense": 8, "chi": 10, "hp": 0 },
+    "passiveEffect": "dodge_after_successful_heal",
+    "passiveDescription": "Ao usar uma skill de cura, ganha +20% esquiva no próximo turno.",
+    "description": "Brincos sagrados das curandeiras do Polo Norte. Símbolo de maestria espiritual."
+  },
+
+  {
+    "id": "item_t_w01", "name": "Manopla de Pedra", "type": "weapon", "element": "Terra",
+    "minLevel": 1, "rarity": "common", "price": 75,
+    "stats": { "attack": 7, "defense": 0, "chi": 0, "hp": 0 },
+    "passiveEffect": "def_bonus_15pct_passive",
+    "passiveDescription": "+15% DEF permanente enquanto este item estiver equipado.",
+    "description": "Luva reforçada com fragmentos de granito. Cada soco parece uma rocha."
+  },
+  {
+    "id": "item_t_w02", "name": "Martelo do Reino", "type": "weapon", "element": "Terra",
+    "minLevel": 12, "rarity": "rare", "price": 750,
+    "stats": { "attack": 22, "defense": 3, "chi": 0, "hp": 0 },
+    "passiveEffect": "stun_chance_25_physical",
+    "passiveDescription": "Ataques básicos têm 25% de chance de aplicar Stun por 1 turno.",
+    "description": "Martelo usado pelos guardas das Muralhas de Ba Sing Se. Pesa 30kg."
+  },
+  {
+    "id": "item_t_w03", "name": "Braçadeiras de Toph", "type": "weapon", "element": "Terra",
+    "minLevel": 22, "rarity": "epic", "price": 3200,
+    "stats": { "attack": 32, "defense": 8, "chi": 0, "hp": 0 },
+    "passiveEffect": "armor_break_on_hit",
+    "passiveDescription": "Cada ataque físico reduz permanentemente a DEF inimiga em 3% (acumula até 5 vezes).",
+    "description": "Réplica das braçadeiras de metal da Mestra Toph. Dobra qualquer metal."
+  },
+  {
+    "id": "item_t_a01", "name": "Colete de Quartzo", "type": "armor", "element": "Terra",
+    "minLevel": 3, "rarity": "common", "price": 130,
+    "stats": { "attack": 1, "defense": 7, "chi": 0, "hp": 0 },
+    "passiveEffect": "low_hp_defense_boost",
+    "passiveDescription": "Quando HP cai abaixo de 50%, recebe +20% DEF automaticamente.",
+    "description": "Proteção reforçada por veios de quartzo. Mais dura quanto mais ameaçada."
+  },
+  {
+    "id": "item_t_a02", "name": "Armadura da Muralha", "type": "armor", "element": "Terra",
+    "minLevel": 15, "rarity": "rare", "price": 1000,
+    "stats": { "attack": 4, "defense": 24, "chi": 0, "hp": 0 },
+    "passiveEffect": "crit_damage_reduction_50",
+    "passiveDescription": "Reduz dano de ataques críticos recebidos em 50%.",
+    "description": "Cada peça pesa 15kg, mas protege como granito vivo. Usada nas grandes batalhas."
+  },
+  {
+    "id": "item_t_a03", "name": "Malha de Platina", "type": "armor", "element": "Terra",
+    "minLevel": 28, "rarity": "epic", "price": 4500,
+    "stats": { "attack": 6, "defense": 40, "chi": 0, "hp": 0 },
+    "passiveEffect": "immune_armor_break",
+    "passiveDescription": "Imune ao efeito de quebra de armadura (armor_break) de qualquer skill.",
+    "description": "A única armadura que resiste à dobra de metal. Nem Toph consegue dobrar."
+  },
+  {
+    "id": "item_t_am01", "name": "Anel de Jade", "type": "amulet", "element": "Terra",
+    "minLevel": 5, "rarity": "uncommon", "price": 190,
+    "stats": { "attack": 2, "defense": 5, "chi": 3, "hp": 0 },
+    "passiveEffect": "shield_duration_plus1",
+    "passiveDescription": "Todos os efeitos de escudo (absorb_shield, full_block) duram +1 turno a mais.",
+    "description": "Jade puro das minas de Ba Sing Se. Símbolo de proteção e permanência."
+  },
+  {
+    "id": "item_t_am02", "name": "Pedra do Avatar", "type": "amulet", "element": "Terra",
+    "minLevel": 35, "rarity": "legendary", "price": 9000,
+    "stats": { "attack": 18, "defense": 30, "chi": 25, "hp": 0 },
+    "passiveEffect": "auto_shield_low_hp",
+    "passiveDescription": "Ao cair a 20% ou menos de HP, recebe automaticamente um escudo de 30 pontos.",
+    "description": "Fragmento da pedra sob o Templo do Ar do Sul. Carrega memórias de todos os Avatares."
+  },
+  {
+    "id": "item_t_ac01", "name": "Botas da Montanha", "type": "accessory", "element": "Terra",
+    "minLevel": 6, "rarity": "uncommon", "price": 200,
+    "stats": { "attack": 0, "defense": 5, "chi": 0, "hp": 5 },
+    "passiveEffect": "immune_knockback",
+    "passiveDescription": "Imune ao efeito de Knockback de qualquer ataque ou skill.",
+    "description": "Botas com sola de rocha vulcânica. Plantadas no solo como uma montanha."
+  },
+  {
+    "id": "item_t_ac02", "name": "Cinto de Couro de Ba Sing Se", "type": "accessory", "element": "Terra",
+    "minLevel": 10, "rarity": "rare", "price": 600,
+    "stats": { "attack": 4, "defense": 6, "chi": 0, "hp": 10 },
+    "passiveEffect": "bonus_hp_10_in_combat",
+    "passiveDescription": "+10 HP máximo dentro de batalha (bônus temporário).",
+    "description": "Feito com couro de criatura das profundezas de Ba Sing Se. Robusto como a cidade."
+  },
+
+  {
+    "id": "item_ar_w01", "name": "Bordão do Nômade", "type": "weapon", "element": "Ar",
+    "minLevel": 1, "rarity": "common", "price": 70,
+    "stats": { "attack": 4, "defense": 2, "chi": 0, "hp": 0 },
+    "passiveEffect": "dodge_plus20_on_attack",
+    "passiveDescription": "Ao atacar com este bordão, ganha +20% esquiva no mesmo turno.",
+    "description": "O bordão tradicional dos Nômades do Ar. Leve como o próprio vento."
+  },
+  {
+    "id": "item_ar_w02", "name": "Bordão do Mestre", "type": "weapon", "element": "Ar",
+    "minLevel": 12, "rarity": "rare", "price": 720,
+    "stats": { "attack": 16, "defense": 0, "chi": 10, "hp": 0 },
+    "passiveEffect": "air_chi_cost_minus5",
+    "passiveDescription": "Todas as skills de Ar custam 5 Chi a menos (mínimo 0).",
+    "description": "Bordão que pertenceu a um Mestre Nômade do Ar. Canaliza o chi naturalmente."
+  },
+  {
+    "id": "item_ar_w03", "name": "Bordão do Avatar Aang", "type": "weapon", "element": "Ar",
+    "minLevel": 28, "rarity": "epic", "price": 5000,
+    "stats": { "attack": 24, "defense": 0, "chi": 20, "hp": 0 },
+    "passiveEffect": "attack_always_hits",
+    "passiveDescription": "Ataques básicos nunca erram (ignora efeitos de esquiva e cegueira do inimigo).",
+    "description": "Réplica fiel do bordão do Avatar Aang. Carrega a memória de mil aventuras."
+  },
+  {
+    "id": "item_ar_a01", "name": "Túnica do Nômade", "type": "armor", "element": "Ar",
+    "minLevel": 3, "rarity": "common", "price": 100,
+    "stats": { "attack": 0, "defense": 5, "chi": 0, "hp": 0 },
+    "passiveEffect": "dodge_plus15_passive",
+    "passiveDescription": "+15% de esquiva permanente enquanto equipado.",
+    "description": "Leve como o vento, usada pelos aprendizes dos Templos do Ar."
+  },
+  {
+    "id": "item_ar_a02", "name": "Manto Sagrado", "type": "armor", "element": "Ar",
+    "minLevel": 18, "rarity": "rare", "price": 1400,
+    "stats": { "attack": 2, "defense": 12, "chi": 18, "hp": 0 },
+    "passiveEffect": "immune_slow_knockback",
+    "passiveDescription": "Imune aos efeitos de Lentidão e Knockback de qualquer fonte.",
+    "description": "O manto dourado dos grandes Mestres do Ar. Flutua mesmo sem vento."
+  },
+  {
+    "id": "item_ar_a03", "name": "Vestes do Avatar", "type": "armor", "element": "Ar",
+    "minLevel": 35, "rarity": "legendary", "price": 10000,
+    "stats": { "attack": 15, "defense": 28, "chi": 35, "hp": 0 },
+    "passiveEffect": "chi_regen_plus5_turn",
+    "passiveDescription": "Recupera +5 Chi adicional no início de cada turno.",
+    "description": "As vestes originais do Avatar, carregadas com energia espiritual dos quatro elementos."
+  },
+  {
+    "id": "item_ar_am01", "name": "Tatuagem Energizada", "type": "amulet", "element": "Ar",
+    "minLevel": 22, "rarity": "epic", "price": 2800,
+    "stats": { "attack": 5, "defense": 0, "chi": 30, "hp": 0 },
+    "passiveEffect": "start_extra_chi_20",
+    "passiveDescription": "Começa cada batalha com +20 Chi acima do máximo (pode ultrapassar o teto por 1 turno).",
+    "description": "As tatuagens dos Mestres do Ar, seladas em cristal espiritual vivo."
+  },
+  {
+    "id": "item_ar_am02", "name": "Colar dos Templos", "type": "amulet", "element": "Ar",
+    "minLevel": 5, "rarity": "uncommon", "price": 210,
+    "stats": { "attack": 0, "defense": 0, "chi": 12, "hp": 0 },
+    "passiveEffect": "chi_on_successful_dodge",
+    "passiveDescription": "Ao esquivar de um ataque com sucesso, recupera 10 Chi.",
+    "description": "Presente dos monges ao completar o primeiro nível de treinamento."
+  },
+  {
+    "id": "item_ar_ac01", "name": "Óculos de Aviador de Aang", "type": "accessory", "element": "Ar",
+    "minLevel": 8, "rarity": "uncommon", "price": 350,
+    "stats": { "attack": 3, "defense": 0, "chi": 5, "hp": 0 },
+    "passiveEffect": "crit_chance_plus10",
+    "passiveDescription": "Todos os ataques têm +10% de chance de acertar criticamente (+50% dano).",
+    "description": "Os icônicos óculos de aviador do Avatar Aang. Proteção estilosa para combate aéreo."
+  },
+  {
+    "id": "item_ar_ac02", "name": "Pergaminho de Tática", "type": "accessory", "element": "Ar",
+    "minLevel": 20, "rarity": "rare", "price": 1200,
+    "stats": { "attack": 5, "defense": 5, "chi": 8, "hp": 0 },
+    "passiveEffect": "all_skills_cooldown_minus1",
+    "passiveDescription": "Reduz o cooldown de TODAS as skills em 1 turno (efeito global).",
+    "description": "Pergaminho com as táticas dos Mestres do Ar. Quem o lê pensa 1 passo à frente."
+  },
+
+  {
+    "id": "item_n_w01", "name": "Bumerangue de Sokka", "type": "weapon", "element": "Neutro",
+    "minLevel": 4, "rarity": "uncommon", "price": 300,
+    "stats": { "attack": 10, "defense": 0, "chi": 0, "hp": 0 },
+    "passiveEffect": "ricochet_debuff",
+    "passiveDescription": "Ataque básico pode ricochetear: 40% de chance de aplicar um debuff aleatório.",
+    "description": "Sempre volta. Sempre. O bumerangue lendário do Guerreiro Sokka."
+  },
+  {
+    "id": "item_n_w02", "name": "Leque de Kyoshi", "type": "weapon", "element": "Neutro",
+    "minLevel": 20, "rarity": "epic", "price": 2500,
+    "stats": { "attack": 20, "defense": 12, "chi": 0, "hp": 0 },
+    "passiveEffect": "block_once_per_battle",
+    "passiveDescription": "Uma vez por batalha, bloqueia automaticamente o próximo ataque recebido.",
+    "description": "Os leques das Guerreiras de Kyoshi, perfeitamente balanceados para ataque e defesa."
+  },
+  {
+    "id": "item_n_a01", "name": "Armadura de Kyoshi", "type": "armor", "element": "Neutro",
+    "minLevel": 16, "rarity": "rare", "price": 1100,
+    "stats": { "attack": 8, "defense": 22, "chi": 0, "hp": 0 },
+    "passiveEffect": "immune_first_stun",
+    "passiveDescription": "Bloqueia o primeiro efeito de Stun de cada batalha.",
+    "description": "Pintura de guerra incluída. Imponente como a própria Avatar Kyoshi."
+  },
+  {
+    "id": "item_n_a02", "name": "Armadura do Equilíbrio", "type": "armor", "element": "Neutro",
+    "minLevel": 32, "rarity": "legendary", "price": 8800,
+    "stats": { "attack": 22, "defense": 32, "chi": 22, "hp": 0 },
+    "passiveEffect": "full_set_bonus",
+    "passiveDescription": "+5% de todos os stats quando todos os 4 slots de equipamento estão preenchidos.",
+    "description": "Criada pelo próprio Avatar. Equilibra os quatro elementos em harmonia perfeita."
+  },
+  {
+    "id": "item_n_am01", "name": "Amuleto da Paz", "type": "amulet", "element": "Neutro",
+    "minLevel": 14, "rarity": "rare", "price": 800,
+    "stats": { "attack": 5, "defense": 5, "chi": 10, "hp": 0 },
+    "passiveEffect": "immune_debuff_first_turn",
+    "passiveDescription": "Imune a todos os debuffs no primeiro turno de cada batalha.",
+    "description": "Criado após o fim da Guerra dos Cem Anos. Símbolo vivo de equilíbrio."
+  },
+  {
+    "id": "item_n_am02", "name": "Medalha das Quatro Nações", "type": "amulet", "element": "Neutro",
+    "minLevel": 30, "rarity": "legendary", "price": 5000,
+    "stats": { "attack": 12, "defense": 12, "chi": 12, "hp": 0 },
+    "passiveEffect": "global_stats_plus5",
+    "passiveDescription": "+5% em TODOS os stats (ATK, DEF, Chi max, HP max).",
+    "description": "Concedida apenas a guerreiros que serviram às quatro nações. Extremamente rara."
+  },
+  {
+    "id": "item_n_ac01", "name": "Bandana de Sokka", "type": "accessory", "element": "Neutro",
+    "minLevel": 1, "rarity": "common", "price": 50,
+    "stats": { "attack": 2, "defense": 2, "chi": 0, "hp": 0 },
+    "passiveEffect": "dodge_plus5_passive",
+    "passiveDescription": "+5% de esquiva permanente de qualquer ataque.",
+    "description": "A bandana de Sokka. Mais útil do que parece, assim como ele mesmo."
+  },
+  {
+    "id": "item_n_ac02", "name": "Máscara do Espírito", "type": "accessory", "element": "Neutro",
+    "minLevel": 25, "rarity": "epic", "price": 4000,
+    "stats": { "attack": 5, "defense": 5, "chi": 15, "hp": 10 },
+    "passiveEffect": "revive_once_25pct",
+    "passiveDescription": "Uma vez por batalha, ao chegar a 0 HP, ressurge com 25% do HP máximo.",
+    "description": "Máscara de espírito antigo. Concede uma segunda chance àqueles dignos de usá-la."
+  },
+
+  {
+    "id": "pot_01", "name": "Água de Cura Simples", "type": "consumable", "element": "Neutro",
+    "minLevel": 1, "rarity": "common", "price": 35,
+    "stats": { "hp": 30 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "heal", "value": 30, "label": "Recupera 30 HP", "icon": "❤️" },
+    "description": "A poção mais básica do jogo. Recupera 30 HP imediatamente."
+  },
+  {
+    "id": "pot_02", "name": "Água de Cura Avançada", "type": "consumable", "element": "Neutro",
+    "minLevel": 8, "rarity": "uncommon", "price": 120,
+    "stats": { "hp": 60 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "heal", "value": 60, "label": "Recupera 60 HP", "icon": "❤️" },
+    "description": "Versão concentrada da água de cura. Recupera 60 HP imediatamente."
+  },
+  {
+    "id": "pot_03", "name": "Água Sagrada de Katara", "type": "consumable", "element": "Água",
+    "minLevel": 20, "rarity": "rare", "price": 480,
+    "stats": { "hp": 100 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "heal_cleanse", "value": 100, "label": "Recupera 100 HP + remove 1 debuff", "icon": "💚" },
+    "description": "Água bênta pela Mestra Katara. Cura 100 HP e remove 1 efeito negativo ativo."
+  },
+  {
+    "id": "pot_04", "name": "Elixir de Chi Menor", "type": "consumable", "element": "Neutro",
+    "minLevel": 1, "rarity": "common", "price": 40,
+    "stats": { "chi": 20 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "restore_chi", "value": 20, "label": "Recupera 20 Chi", "icon": "💜" },
+    "description": "Concentrado básico de energia espiritual. Recupera 20 Chi imediatamente."
+  },
+  {
+    "id": "pot_05", "name": "Elixir de Chi Maior", "type": "consumable", "element": "Neutro",
+    "minLevel": 12, "rarity": "uncommon", "price": 160,
+    "stats": { "chi": 50 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "restore_chi", "value": 50, "label": "Recupera 50 Chi", "icon": "💜" },
+    "description": "Elixir concentrado de alta pureza. Recupera 50 Chi imediatamente."
+  },
+  {
+    "id": "pot_06", "name": "Essência dos Templos", "type": "consumable", "element": "Ar",
+    "minLevel": 15, "rarity": "rare", "price": 400,
+    "stats": { "hp": 30, "chi": 30 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "heal_and_chi", "hp": 30, "chi": 30, "label": "Recupera 30 HP e 30 Chi", "icon": "✨" },
+    "description": "Destilado espiritual dos Quatro Templos do Ar. Restaura corpo e espírito."
+  },
+  {
+    "id": "pot_07", "name": "Bomba de Fumaça", "type": "consumable", "element": "Neutro",
+    "minLevel": 5, "rarity": "uncommon", "price": 130,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "force_enemy_miss", "turns": 1, "label": "Inimigo erra próximo ataque", "icon": "💨" },
+    "description": "Bomba de fumaça dos Guerreiros de Kyoshi. Garante que o inimigo erre o próximo ataque."
+  },
+  {
+    "id": "pot_08", "name": "Pó de Pedra", "type": "consumable", "element": "Terra",
+    "minLevel": 3, "rarity": "common", "price": 55,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "absorb_shield", "value": 25, "label": "Cria escudo de 25 HP", "icon": "🛡️" },
+    "description": "Poeira de granito que endurece a pele. Cria escudo de 25 HP instantaneamente."
+  },
+  {
+    "id": "pot_09", "name": "Elixir de Fúria", "type": "consumable", "element": "Fogo",
+    "minLevel": 10, "rarity": "rare", "price": 350,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "fury_charges", "value": 2, "label": "Enche 2 cargas de Fúria", "icon": "⚡" },
+    "description": "Extrato vulcânico puro. Enche instantaneamente 2 cargas da barra de Fúria."
+  },
+  {
+    "id": "pot_10", "name": "Antídoto Espiritual", "type": "consumable", "element": "Neutro",
+    "minLevel": 8, "rarity": "uncommon", "price": 200,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "full_cleanse", "label": "Remove TODOS os debuffs ativos", "icon": "🌀" },
+    "description": "Purifica o espírito de toda influência negativa. Remove TODOS os debuffs de uma vez."
+  },
+  {
+    "id": "pot_11", "name": "Pergaminho de Amplificação", "type": "consumable", "element": "Neutro",
+    "minLevel": 12, "rarity": "rare", "price": 380,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "damage_boost_next", "value": 0.5, "label": "Próxima skill causa +50% dano", "icon": "📜" },
+    "description": "Pergaminho antigo que amplifica o próximo ataque. A próxima skill causa 50% mais dano."
+  },
+  {
+    "id": "pot_12", "name": "Pergaminho de Aceleração", "type": "consumable", "element": "Ar",
+    "minLevel": 18, "rarity": "rare", "price": 450,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "reset_all_cooldowns", "label": "Zera cooldown de todas as skills", "icon": "⏩" },
+    "description": "O vento do tempo apaga os cooldowns. No próximo turno, todas as skills estão disponíveis."
+  },
+  {
+    "id": "pot_13", "name": "Tônico de Guerreiro", "type": "consumable", "element": "Fogo",
+    "minLevel": 6, "rarity": "uncommon", "price": 150,
+    "stats": { "attack": 20 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "buff_attack", "value": 20, "duration": 3, "label": "+20 ATK por 3 turnos", "icon": "⚔️" },
+    "description": "Tônico de guerreiro da Nação do Fogo. Aumenta ATK em 20 por 3 turnos."
+  },
+  {
+    "id": "pot_14", "name": "Tônico de Guardião", "type": "consumable", "element": "Terra",
+    "minLevel": 6, "rarity": "uncommon", "price": 150,
+    "stats": { "defense": 20 },
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "buff_defense", "value": 20, "duration": 3, "label": "+20 DEF por 3 turnos", "icon": "🛡️" },
+    "description": "Tônico de defesa dos guardas de Ba Sing Se. Aumenta DEF em 20 por 3 turnos."
+  },
+  {
+    "id": "pot_15", "name": "Frasco de Silêncio", "type": "consumable", "element": "Ar",
+    "minLevel": 15, "rarity": "rare", "price": 420,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "silence_enemy", "turns": 1, "label": "Inimigo não pode usar skills por 1 turno", "icon": "🔇" },
+    "description": "O silêncio do vento que para o chi. O inimigo não pode usar nenhuma skill no próximo turno."
+  },
+  {
+    "id": "pot_16", "name": "Frasco de Lava", "type": "consumable", "element": "Fogo",
+    "minLevel": 8, "rarity": "uncommon", "price": 180,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "apply_burn", "damage_per_turn": 10, "turns": 3, "label": "Queimadura no inimigo por 3 turnos", "icon": "🌋" },
+    "description": "Lava concentrada em frasco de vidro espessado. Aplica Queimadura de -10 HP/turno por 3 turnos."
+  },
+  {
+    "id": "pot_17", "name": "Frasco de Gelo", "type": "consumable", "element": "Água",
+    "minLevel": 10, "rarity": "uncommon", "price": 200,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "apply_freeze", "turns": 1, "label": "Congela o inimigo por 1 turno", "icon": "🧊" },
+    "description": "Gelo eterno do Polo Norte selado em frasco. Congela o inimigo por 1 turno completo."
+  },
+  {
+    "id": "pot_18", "name": "Chá do Iroh", "type": "consumable", "element": "Fogo",
+    "minLevel": 4, "rarity": "uncommon", "price": 140,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "regen_remove_stun", "hp_per_turn": 15, "turns": 3, "label": "Regen 15 HP/turno por 3 turnos + remove Stun", "icon": "🍵" },
+    "description": "O melhor chá do mundo, segundo o Iroh. Regenera 15 HP/turno por 3 turnos e remove Stun."
+  },
+  {
+    "id": "pot_19", "name": "Pena do Avatar", "type": "consumable", "element": "Ar",
+    "minLevel": 25, "rarity": "epic", "price": 1800,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "revive_25pct", "label": "Revive com 25% HP se morrer (uso automático)", "icon": "🪶" },
+    "description": "Pena de pássaro-bisão alado bênta pelo Avatar. Se morrer com ela, revive com 25% HP."
+  },
+  {
+    "id": "pot_20", "name": "Essência Vulcânica", "type": "consumable", "element": "Fogo",
+    "minLevel": 22, "rarity": "epic", "price": 1200,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "berserk_mode", "damage_boost": 0.4, "hp_cost_per_turn": 5, "duration": 2, "label": "+40% dano por 2 turnos, -5 HP/turno", "icon": "💥" },
+    "description": "Extrato do núcleo de vulcão ativo. +40% dano por 2 turnos, mas você perde 5 HP por turno."
+  },
+  {
+    "id": "pot_21",
+    "name": "Antídoto Universal",
+    "type": "consumable",
+    "element": "Neutro",
+    "minLevel": 5,
+    "rarity": "uncommon",
+    "price": 180,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "cleanse", "label": "Remove todos os status (queimadura, atordoamento, congelamento, lentidão)", "icon": "✨" },
+    "description": "Composto purificador que neutraliza queimaduras, atordoamento, congelamento e lentidão de uma só vez."
+  },
+  {
+    "id": "pot_22",
+    "name": "Lágrima do Espírito",
+    "type": "consumable",
+    "element": "Neutro",
+    "minLevel": 25,
+    "rarity": "legendary",
+    "price": 4500,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "revive", "percent": 100, "threshold": 30, "label": "Cura totalmente quando HP < 30% (uso emergencial)", "icon": "🌟" },
+    "description": "Cristal raríssimo do Mundo Espiritual. Use quando seu HP estiver abaixo de 30% — você é curado completamente. Se tentar usar com HP cheio, falha."
+  },
+  {
+    "id": "pot_23",
+    "name": "Pó de Vento Esquivo",
+    "type": "consumable",
+    "element": "Ar",
+    "minLevel": 8,
+    "rarity": "rare",
+    "price": 280,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "buff_evasion", "value": 30, "duration": 2, "label": "+30% chance de esquiva por 2 turnos", "icon": "💨" },
+    "description": "Pó volátil dos Templos do Ar. Sopre antes da batalha e seus reflexos ficam afiados — +30% de esquiva por 2 turnos."
+  },
+  {
+    "id": "pot_24",
+    "name": "Sangue do Predador",
+    "type": "consumable",
+    "element": "Fogo",
+    "minLevel": 12,
+    "rarity": "rare",
+    "price": 320,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "buff_crit", "value": 25, "duration": 2, "label": "+25% chance de crítico por 2 turnos", "icon": "🩸" },
+    "description": "Elixir vermelho-sangue. Por 2 turnos, seus golpes encontram pontos vitais — +25% de chance de crítico."
+  },
+  {
+    "id": "pot_25",
+    "name": "Bomba Incendiária",
+    "type": "consumable",
+    "element": "Fogo",
+    "minLevel": 6,
+    "rarity": "uncommon",
+    "price": 220,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "bomb", "value": 40, "label": "Causa 40 de dano direto no oponente", "icon": "💣" },
+    "description": "Esfera de pólvora envolta em pano oleado. Joga no inimigo e causa 40 de dano direto, sem gastar Chi nem cooldown."
+  },
+  {
+    "id": "pot_26",
+    "name": "Granada de Choque",
+    "type": "consumable",
+    "element": "Neutro",
+    "minLevel": 18,
+    "rarity": "rare",
+    "price": 600,
+    "stats": {},
+    "passiveEffect": null,
+    "passiveDescription": null,
+    "effect": { "type": "bomb", "value": 80, "label": "Causa 80 de dano direto no oponente", "icon": "💥" },
+    "description": "Versão lendária da bomba incendiária. Causa 80 de dano direto. Recomendado para fechar batalhas onde o inimigo está com pouco HP."
+  }
+]
