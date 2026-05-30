@@ -1,4 +1,5 @@
- "name": "avatar-rpg-backend",
+{
+  "name": "avatar-rpg-backend",
   "type": "module",
   "version": "3.0.0",
   "scripts": {
