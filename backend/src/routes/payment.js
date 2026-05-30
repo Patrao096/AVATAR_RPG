@@ -213,7 +213,10 @@ router.post('/webhook', async (req, res) => {
     }
 
     // ─── Assinatura criada/aprovada ───
-    if (type === 'subscription_preapproval' || action === 'updated') {
+    // Apenas eventos de preapproval. Antes, `action === 'updated'` também
+    // disparava aqui e capturava webhooks de pagamento comum (data.id de
+    // pagamento, não de preapproval), causando erros e re-extensões indevidas.
+    if (type === 'subscription_preapproval') {
       const preApproval = new PreApproval(mp);
       const sub = await preApproval.get({ id: data.id });
 

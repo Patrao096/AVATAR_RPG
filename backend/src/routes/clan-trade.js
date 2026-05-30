@@ -262,6 +262,16 @@ router.post('/:id/accept', authMiddleware, async (req, res) => {
 
     // ─── Executa transação ───
     await prisma.$transaction(async (tx) => {
+      // Trava de concorrência: só prossegue se a troca ainda estiver pendente.
+      // Em trocas abertas (toUserId null), dois membros podem clicar juntos;
+      // só um vê count 1 e os itens/Yuan se movem uma única vez.
+      const claimed = await tx.clanTrade.updateMany({
+        where: { id: trade.id, status: 'pending' },
+        data: { status: 'accepted', acceptedBy: req.userId, completedAt: new Date() },
+      });
+      if (claimed.count !== 1) {
+        throw new Error('TRADE_GONE');
+      }
       // Move offerItems: from → me
       for (const it of trade.offerItems) {
         await moveItem(tx, fromChar.id, myChar.id, it.itemName, it.qty);
@@ -280,14 +290,14 @@ router.post('/:id/accept', authMiddleware, async (req, res) => {
         await tx.character.update({ where: { id: fromChar.id }, data: { money: { increment: trade.requestYuan } } });
       }
 
-      await tx.clanTrade.update({
-        where: { id: trade.id },
-        data: { status: 'accepted', acceptedBy: req.userId, completedAt: new Date() },
-      });
+      // (status já marcado como 'accepted' na trava de concorrência acima)
     });
 
     res.json({ success: true, message: '✓ Troca concluída!' });
   } catch (error) {
+    if (error.message === 'TRADE_GONE') {
+      return res.status(409).json({ error: 'Troca já encerrada' });
+    }
     console.error('clan-trade/accept:', error);
     res.status(500).json({ error: error.message || 'Erro ao processar troca' });
   }

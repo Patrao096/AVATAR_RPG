@@ -3,6 +3,10 @@ import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
+// IMPORTANTE: precisa ser IDÊNTICO ao fallback de auth.js e server.js,
+// senão tokens assinados sem JWT_SECRET no .env não validam aqui.
+const JWT_SECRET = process.env.JWT_SECRET || 'avatar-rpg-secret-change-in-production';
+
 // ─── Helmet sem CSP bloqueante para OAuth redirect ───
 export const helmetConfig = helmet({
   contentSecurityPolicy: false, // Desabilitado em dev — habilite em produção com cuidado
@@ -64,7 +68,7 @@ export function authMiddleware(req, res, next) {
 
   try {
     // verify sem issuer/audience — igual ao sign em server.js
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.userId;
     req.discordId = decoded.discordId;
     req.userRole = decoded.role;
@@ -83,7 +87,7 @@ export async function adminMiddleware(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Token não fornecido.' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     const adminIds = (process.env.ADMIN_DISCORD_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
 
     if (!adminIds.includes(decoded.discordId)) {

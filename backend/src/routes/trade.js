@@ -156,11 +156,24 @@ router.post('/:id/accept', authMiddleware, async (req, res) => {
 
     // Executa troca atomicamente
     await prisma.$transaction(async (tx) => {
-      // Decrementa item do receiver (já foi decrementado do sender na proposta)
-      await tx.inventoryItem.update({
-        where: { id: myItem.id },
+      // Trava de concorrência: só prossegue se a troca ainda estiver pendente.
+      // Dois accepts simultâneos → só um vê count 1; o outro aborta sem duplicar.
+      const claimed = await tx.tradeOffer.updateMany({
+        where: { id, status: 'pending' },
+        data: { status: 'accepted', completedAt: new Date() },
+      });
+      if (claimed.count !== 1) {
+        throw new Error('TRADE_GONE');
+      }
+
+      // Decrementa item do receiver (condicional, evita estoque negativo)
+      const dec = await tx.inventoryItem.updateMany({
+        where: { id: myItem.id, quantity: { gt: 0 } },
         data: { quantity: { decrement: 1 } },
       });
+      if (dec.count !== 1) {
+        throw new Error('NO_ITEM');
+      }
 
       // Dá item do sender para receiver
       const existingForReceiver = await tx.inventoryItem.findFirst({
@@ -192,15 +205,17 @@ router.post('/:id/accept', authMiddleware, async (req, res) => {
         });
       }
 
-      // Marca troca como aceita
-      await tx.tradeOffer.update({
-        where: { id },
-        data: { status: 'accepted', completedAt: new Date() },
-      });
+      // (status já marcado como 'accepted' na trava de concorrência acima)
     });
 
     res.json({ success: true, message: `Troca concluída! Você recebeu "${trade.offeredItemName}".` });
   } catch (error) {
+    if (error.message === 'TRADE_GONE') {
+      return res.status(409).json({ error: 'Esta troca não está mais disponível.' });
+    }
+    if (error.message === 'NO_ITEM') {
+      return res.status(400).json({ error: `Você não possui "${trade.requestedItemName}" para esta troca.` });
+    }
     console.error('trade/accept:', error);
     res.status(500).json({ error: 'Erro ao aceitar troca.' });
   }

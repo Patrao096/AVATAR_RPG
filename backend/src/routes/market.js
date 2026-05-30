@@ -173,31 +173,47 @@ router.post('/buy', authMiddleware, async (req, res) => {
 
     const seller = await prisma.character.findUnique({ where: { userId: listing.sellerId } });
 
-    await prisma.$transaction([
-      // Debita comprador
-      prisma.character.update({
-        where: { id: buyer.id },
+    await prisma.$transaction(async (tx) => {
+      // O delete do anúncio é a trava de concorrência: se dois compram ao mesmo
+      // tempo, só um remove a linha; o outro vê count 0 e aborta (sem dupe).
+      const removed = await tx.marketListing.deleteMany({ where: { id: listingId } });
+      if (removed.count !== 1) {
+        throw new Error('LISTING_GONE');
+      }
+
+      // Débito condicional: só desconta se o saldo cobrir o preço (evita negativo).
+      const debited = await tx.character.updateMany({
+        where: { id: buyer.id, money: { gte: listing.priceMoney } },
         data: { money: { decrement: listing.priceMoney } },
-      }),
+      });
+      if (debited.count !== 1) {
+        throw new Error('INSUFFICIENT_FUNDS');
+      }
+
       // Credita vendedor
-      prisma.character.update({
+      await tx.character.update({
         where: { id: seller.id },
         data: { money: { increment: listing.priceMoney } },
-      }),
+      });
+
       // Adiciona item ao inventário do comprador
-      prisma.inventoryItem.create({
+      await tx.inventoryItem.create({
         data: {
           characterId: buyer.id,
           itemName: listing.itemName,
           quantity: listing.quantity,
         },
-      }),
-      // Remove o anúncio
-      prisma.marketListing.delete({ where: { id: listingId } }),
-    ]);
+      });
+    });
 
     res.json({ success: true, message: `Comprou ${listing.itemName} por ${listing.priceMoney} Yuan!` });
   } catch (error) {
+    if (error.message === 'LISTING_GONE') {
+      return res.status(409).json({ error: 'Este item acabou de ser vendido.' });
+    }
+    if (error.message === 'INSUFFICIENT_FUNDS') {
+      return res.status(400).json({ error: 'Yuan insuficiente' });
+    }
     console.error('market/buy:', error);
     res.status(500).json({ error: 'Erro ao comprar item' });
   }

@@ -217,6 +217,14 @@ router.post('/webhook', async (req, res) => {
 
     // Usa transação para garantir atomicidade
     await prisma.$transaction(async (tx) => {
+      // Idempotência: o MP reenvia webhooks. Se este paymentId já foi processado,
+      // não entrega de novo (o @unique em paymentId também protege, mas aqui
+      // evitamos o erro ruidoso de violação de constraint a cada retry).
+      const already = await tx.realStorePurchase.findUnique({
+        where: { paymentId: String(data.id) },
+      });
+      if (already) return;
+
       const storeItem = await tx.realStoreItem_rotation.findUnique({
         where: { id: ref.storeItemId },
       });

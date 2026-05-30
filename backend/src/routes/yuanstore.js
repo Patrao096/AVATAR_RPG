@@ -190,65 +190,69 @@ router.post('/buy-daily', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: `Yuan insuficiente. Necessário: ${totalPrice}` });
     }
 
-    const ops = [
-      prisma.character.update({
-        where: { id: character.id },
-        data: { money: { decrement: totalPrice } },
-      }),
-    ];
-
-    let infoMsg = '';
-
-    // ─── SKILL ───
+    // Validações de skill ANTES da transação (não dependem de concorrência)
+    let skillData = null;
+    let catalog = null;
+    let isStackable = false;
     if (type === 'skill') {
       if (buyQty > 1) return res.status(400).json({ error: 'Skills: máximo 1 por compra' });
-      const skillData = SKILLS[dailyId];
+      skillData = SKILLS[dailyId];
       if (!skillData) return res.status(500).json({ error: 'Skill não encontrada no catálogo' });
-
       const unlocked = Array.isArray(character.unlockedSkills) ? character.unlockedSkills : [];
       if (unlocked.includes(dailyId)) {
         return res.status(400).json({ error: 'Você já possui esta skill' });
       }
-      unlocked.push(dailyId);
-      ops.push(prisma.character.update({
-        where: { id: character.id },
-        data: { unlockedSkills: unlocked },
-      }));
-      infoMsg = `🎯 Skill "${skillData.name}" desbloqueada! Equipe-a no Loadout.`;
-
-    // ─── ITEM / POÇÃO ───
     } else {
-      const catalog = getAllItems().find(i => i.id === dailyId);
+      catalog = getAllItems().find(i => i.id === dailyId);
       if (!catalog) return res.status(404).json({ error: 'Item não encontrado' });
+      isStackable = catalog.type === 'consumable' || catalog.type === 'material';
+    }
 
-      const isStackable = catalog.type === 'consumable' || catalog.type === 'material';
+    let infoMsg = '';
 
-      if (isStackable) {
-        const existing = await prisma.inventoryItem.findFirst({
+    await prisma.$transaction(async (tx) => {
+      // Débito condicional: trava de concorrência contra saldo negativo / dupe.
+      const debited = await tx.character.updateMany({
+        where: { id: character.id, money: { gte: totalPrice } },
+        data: { money: { decrement: totalPrice } },
+      });
+      if (debited.count !== 1) throw new Error('INSUFFICIENT_FUNDS');
+
+      if (type === 'skill') {
+        // Relê a lista atual dentro da transação para não sobrescrever corrida.
+        const fresh = await tx.character.findUnique({ where: { id: character.id } });
+        const unlocked = Array.isArray(fresh.unlockedSkills) ? fresh.unlockedSkills : [];
+        if (unlocked.includes(dailyId)) throw new Error('ALREADY_OWNED');
+        unlocked.push(dailyId);
+        await tx.character.update({
+          where: { id: character.id },
+          data: { unlockedSkills: unlocked },
+        });
+        infoMsg = `🎯 Skill "${skillData.name}" desbloqueada! Equipe-a no Loadout.`;
+      } else if (isStackable) {
+        const existing = await tx.inventoryItem.findFirst({
           where: { characterId: character.id, itemName: catalog.name },
         });
         if (existing) {
-          ops.push(prisma.inventoryItem.update({
+          await tx.inventoryItem.update({
             where: { id: existing.id },
             data: { quantity: { increment: buyQty } },
-          }));
+          });
         } else {
-          ops.push(prisma.inventoryItem.create({
+          await tx.inventoryItem.create({
             data: { characterId: character.id, itemName: catalog.name, quantity: buyQty },
-          }));
+          });
         }
         infoMsg = `🧪 ${buyQty}x ${catalog.name} adicionado ao inventário!`;
       } else {
         for (let i = 0; i < buyQty; i++) {
-          ops.push(prisma.inventoryItem.create({
+          await tx.inventoryItem.create({
             data: { characterId: character.id, itemName: catalog.name, quantity: 1 },
-          }));
+          });
         }
         infoMsg = `⚔️ ${buyQty}x ${catalog.name} adquirido! Equipe no Inventário.`;
       }
-    }
-
-    await prisma.$transaction(ops);
+    });
 
     res.json({
       success: true,
@@ -259,6 +263,12 @@ router.post('/buy-daily', authMiddleware, async (req, res) => {
     });
 
   } catch (error) {
+    if (error.message === 'INSUFFICIENT_FUNDS') {
+      return res.status(400).json({ error: 'Yuan insuficiente' });
+    }
+    if (error.message === 'ALREADY_OWNED') {
+      return res.status(400).json({ error: 'Você já possui esta skill' });
+    }
     console.error('yuanstore/buy-daily:', error);
     res.status(500).json({ error: 'Erro ao comprar produto diário' });
   }

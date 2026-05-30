@@ -685,7 +685,7 @@ router.post('/defend', authMiddleware, async (req, res) => {
 });
 
 router.post('/end', authMiddleware, async (req, res) => {
-  const { battleId, opponentName, opponentElement, opponentElo = 500, result } = req.body;
+  let { battleId, opponentName, opponentElement, opponentElo = 500, result } = req.body;
   if (!opponentName || !result) {
     return res.status(400).json({ error: 'Dados incompletos' });
   }
@@ -697,6 +697,36 @@ router.post('/end', authMiddleware, async (req, res) => {
     // ─── Detecta batalha amistosa pela state ANTES de limpar ───
     const battleState = getBattleState(battleId);
     const isFriendly = !!battleState?.isFriendly;
+
+    // ─── Idempotência: a state vive 60s após o fim; impede premiar 2x ───
+    if (battleState) {
+      if (battleState._endSettled) {
+        return res.status(409).json({ error: 'Batalha já finalizada.' });
+      }
+      battleState._endSettled = true; // marca síncrono, antes de qualquer await
+    }
+
+    // ─── Anti-cheat: nunca confie em result/opponentElo do cliente. ───
+    // Se ainda temos o estado em memória, o resultado e os dados do oponente
+    // são derivados do servidor (impede forjar vitórias e inflar o ELO inimigo).
+    if (battleState) {
+      const mySide = getSideForUser(battleId, req.userId);
+      const outcome = getOutcome(battleId);
+      if (!mySide) {
+        return res.status(403).json({ error: 'Você não participa desta batalha.' });
+      }
+      if (outcome) {
+        result = outcome === mySide ? 'win' : 'lose';
+      }
+      const oppData = battleState.sides?.[oppositeSide(mySide)];
+      if (oppData) {
+        opponentName = oppData.name || opponentName;
+        opponentElement = oppData.element || opponentElement;
+        opponentElo = oppData.elo ?? opponentElo;
+      }
+    }
+    // Limita o ELO do oponente a uma faixa sã para conter inflação de recompensa.
+    opponentElo = Math.min(4000, Math.max(0, Number(opponentElo) || 500));
 
     if (isFriendly) {
       // Amistosa: 50% EXP, sem ELO, sem wins/losses, sem quota, sem money grande

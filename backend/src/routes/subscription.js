@@ -35,7 +35,15 @@ router.get('/mine', authMiddleware, async (req, res) => {
 
 // POST /api/subscription/activate — ativa plano (modo dev/simulado).
 // Em produção, o fluxo real usa /api/payment/subscription/create com Mercado Pago.
+// IMPORTANTE: este atalho concede premium SEM pagamento. Fica desativado por
+// padrão e só liga com ALLOW_DEV_ACTIVATE=true (nunca em produção).
 router.post('/activate', authMiddleware, async (req, res) => {
+  const devActivateEnabled =
+    process.env.ALLOW_DEV_ACTIVATE === 'true' && process.env.NODE_ENV !== 'production';
+  if (!devActivateEnabled) {
+    return res.status(403).json({ error: 'Ativação manual desabilitada. Use o checkout de pagamento.' });
+  }
+
   const { planType } = req.body;
 
   if (!PLANS[planType] || planType === 'free') {

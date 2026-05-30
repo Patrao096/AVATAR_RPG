@@ -301,9 +301,18 @@ router.post('/:id/complete', authMiddleware, async (req, res) => {
     // Aplica EXP corretamente (controla level-up)
     const progression = applyExpGain(character, quest.rewardExp);
 
-    const ops = [
-      prisma.userQuest.update({ where: { id: quest.id }, data: { isCompleted: true } }),
-      prisma.character.update({
+    await prisma.$transaction(async (tx) => {
+      // Trava de concorrência: marca como concluída só se ainda não estava.
+      // Dois cliques simultâneos → só um vê count 1 e segue para a recompensa.
+      const claimed = await tx.userQuest.updateMany({
+        where: { id: quest.id, isCompleted: false, isFailed: false },
+        data: { isCompleted: true },
+      });
+      if (claimed.count !== 1) {
+        throw new Error('ALREADY_CLAIMED');
+      }
+
+      await tx.character.update({
         where: { id: character.id },
         data: {
           exp: progression.newExp,
@@ -312,27 +321,25 @@ router.post('/:id/complete', authMiddleware, async (req, res) => {
           money: { increment: quest.rewardYuan },
           questsCompletedToday: { increment: 1 },
         },
-      }),
-    ];
-
-    if (quest.rewardItem) {
-      // Tenta empilhar
-      const existing = await prisma.inventoryItem.findFirst({
-        where: { characterId: character.id, itemName: quest.rewardItem },
       });
-      if (existing) {
-        ops.push(prisma.inventoryItem.update({
-          where: { id: existing.id },
-          data: { quantity: { increment: 1 } },
-        }));
-      } else {
-        ops.push(prisma.inventoryItem.create({
-          data: { characterId: character.id, itemName: quest.rewardItem, quantity: 1 },
-        }));
-      }
-    }
 
-    await prisma.$transaction(ops);
+      if (quest.rewardItem) {
+        // Tenta empilhar
+        const existing = await tx.inventoryItem.findFirst({
+          where: { characterId: character.id, itemName: quest.rewardItem },
+        });
+        if (existing) {
+          await tx.inventoryItem.update({
+            where: { id: existing.id },
+            data: { quantity: { increment: 1 } },
+          });
+        } else {
+          await tx.inventoryItem.create({
+            data: { characterId: character.id, itemName: quest.rewardItem, quantity: 1 },
+          });
+        }
+      }
+    });
     res.json({
       success: true,
       rewardExp: quest.rewardExp,
@@ -344,6 +351,9 @@ router.post('/:id/complete', authMiddleware, async (req, res) => {
       questsRemainingToday: isPremium ? null : Math.max(0, FREE_DAILY_QUEST_LIMIT - (character.questsCompletedToday + 1)),
     });
   } catch (error) {
+    if (error.message === 'ALREADY_CLAIMED') {
+      return res.status(400).json({ error: 'Recompensa já coletada' });
+    }
     console.error('quest/complete:', error);
     res.status(500).json({ error: 'Erro ao completar missão' });
   }
