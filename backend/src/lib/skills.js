@@ -347,7 +347,7 @@ const TERRA_SKILLS = {
 
   // ─── CAMINHO A: TANK (Kyoshi — defesa, resistência, contra-ataque) ──────
 
-  projétil_pedra: {
+  projetil_pedra: {
     id: 'projetil_pedra', name: 'Projétil de Pedra', element: 'Terra', path: 'A',
     icon: '🪨', tier: 1, minLevel: 1,
     baseDamageMin: 22, baseDamageMax: 34, chiCost: 12, baseCooldownTurns: 1,
@@ -772,7 +772,7 @@ export function getEquippedSkillsForBattle(character) {
   // Skill base do elemento é sempre permitida (após cap. 1 ela vem em unlocked,
   // mas pra retrocompatibilidade deixamos passar mesmo se não estiver).
   const baseSkillForCharElement = ({
-    Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'dobra_terra', Ar: 'dobra_ar',
+    Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'projetil_pedra', Ar: 'rajada_de_vento',
   })[character.element];
 
   return equipped

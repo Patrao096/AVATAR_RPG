@@ -107,8 +107,8 @@ function baseSkillForElement(element) {
   const map = {
     Fogo: 'dobra_fogo',
     Água: 'dobra_agua',
-    Terra: 'dobra_terra',
-    Ar: 'dobra_ar',
+    Terra: 'projetil_pedra',
+    Ar: 'rajada_de_vento',
   };
   return map[element] || null;
 }
@@ -802,8 +802,8 @@ router.post('/choice', authMiddleware, async (req, res) => {
       const BASE_SKILL_NAMES = {
         dobra_fogo: 'Dobra de Fogo',
         dobra_agua: 'Dobra de Água',
-        dobra_terra: 'Dobra de Terra',
-        dobra_ar: 'Dobra de Ar',
+        projetil_pedra: 'Projétil de Pedra',
+        rajada_de_vento: 'Rajada de Vento',
       };
 
       const baseSkillName = baseSkillUnlocked ? (BASE_SKILL_NAMES[baseSkillUnlocked] || baseSkillUnlocked) : null;

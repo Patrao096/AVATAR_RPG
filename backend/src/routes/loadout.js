@@ -36,7 +36,7 @@ router.get('/', authMiddleware, async (req, res) => {
     // Exceção: skill base do elemento (dobra_<elemento>) sempre disponível
     // (vem após cap. 1 da história, mas pra retrocompat aceitamos mesmo sem unlock).
     const baseSkillForCharElement = ({
-      Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'dobra_terra', Ar: 'dobra_ar',
+      Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'projetil_pedra', Ar: 'rajada_de_vento',
     })[character.element];
 
     // Skill base elemental — sempre disponível pra equipar
@@ -110,7 +110,7 @@ router.post('/equip-skill', authMiddleware, async (req, res) => {
     //      (ganha por capítulo de história ou comprando na loja).
     //   3. Skills lendárias/eventos ficam em unlocked também.
     const baseSkillForCharElement = ({
-      Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'dobra_terra', Ar: 'dobra_ar',
+      Fogo: 'dobra_fogo', 'Água': 'dobra_agua', Terra: 'projetil_pedra', Ar: 'rajada_de_vento',
     })[character.element];
     const isBaseElementalSkill = (skillId === baseSkillForCharElement);
     const isUnlocked = unlocked.includes(skillId);
