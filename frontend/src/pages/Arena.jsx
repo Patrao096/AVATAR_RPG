@@ -437,18 +437,18 @@ export default function Arena({ user }) {
     );
   }
 
-  const myHp = state?.me.hp ?? battle?.player?.hp ?? 100;
-  const myMaxHp = state?.me.maxHp ?? battle?.player?.maxHp ?? 100;
-  const myChi = state?.me.chi ?? battle?.player?.chi ?? 50;
-  const myMaxChi = state?.me.maxChi ?? battle?.player?.maxChi ?? 50;
-  const oppHp = state?.opponent.hp ?? battle?.opponent?.maxHp ?? 100;
-  const oppMaxHp = state?.opponent.maxHp ?? battle?.opponent?.maxHp ?? 100;
-  const myConsumables = state?.me.consumables || [];
-  const myBuffs = state?.me.buffs || [];
-  const oppBuffs = state?.opponent.buffs || [];
-  const myStatus = state?.me.statusEffects || [];
-  const oppStatus = state?.opponent.statusEffects || [];
-  const lastChiRegen = state?.me.lastChiRegen || 0;
+  const myHp = state?.me?.hp ?? battle?.player?.hp ?? 100;
+  const myMaxHp = state?.me?.maxHp ?? battle?.player?.maxHp ?? 100;
+  const myChi = state?.me?.chi ?? battle?.player?.chi ?? 50;
+  const myMaxChi = state?.me?.maxChi ?? battle?.player?.maxChi ?? 50;
+  const oppHp = state?.opponent?.hp ?? battle?.opponent?.maxHp ?? 100;
+  const oppMaxHp = state?.opponent?.maxHp ?? battle?.opponent?.maxHp ?? 100;
+  const myConsumables = state?.me?.consumables || [];
+  const myBuffs = state?.me?.buffs || [];
+  const oppBuffs = state?.opponent?.buffs || [];
+  const myStatus = state?.me?.statusEffects || [];
+  const oppStatus = state?.opponent?.statusEffects || [];
+  const lastChiRegen = state?.me?.lastChiRegen || 0;
 
   return (
     <div className="lg:ml-56 pt-16 lg:pt-0 pb-24 lg:pb-0 min-h-screen page-enter">

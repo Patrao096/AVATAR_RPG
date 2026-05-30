@@ -53,7 +53,7 @@ export default function ClanTradesTab({ mine, onReload }) {
         <ActiveTradesList trades={active} onReload={() => { loadAll(); onReload?.(); }} />
       )}
       {!loading && view === 'create' && (
-        <CreateTradeForm members={mine.clan.members} myUserId={mine.myUserId}
+        <CreateTradeForm members={mine.clan?.members || []} myUserId={mine.myUserId}
           onCreated={() => { loadAll(); setView('active'); }} />
       )}
       {!loading && view === 'history' && (
@@ -263,7 +263,7 @@ function CreateTradeForm({ members, myUserId, onCreated }) {
 
   if (loading) return <p className="text-zinc-500 text-sm py-4 text-center">Carregando inventário...</p>;
 
-  const otherMembers = members.filter(m => m.userId !== myUserId);
+  const otherMembers = (members || []).filter(m => m.userId !== myUserId);
 
   return (
     <div className="bg-zinc-900 border border-teal-500/20 rounded-2xl p-5 space-y-4">

@@ -4,7 +4,7 @@ import {
   buttonRow, actionButton,
 } from '../builders.js';
 import { apiGet, apiPost, getUserJwt } from '../../api.js';
-import { cached, invalidate } from '../../cache.js';
+import { cached, invalidate, peek } from '../../cache.js';
 import { hasActivePremium } from '../../utils/permissions.js';
 
 const TAB_INFO = {
@@ -93,7 +93,8 @@ async function buildSellTab(discordUser) {
   }
 
   const inv = await cached(`inv:${userId}`, () => apiGet(`/api/bot/inventory/${userId}`));
-  const sellable = (Array.isArray(inv) ? inv : []).filter(i => !i.equipped && i.type !== 'material');
+  const invArr = Array.isArray(inv) ? inv : (inv?.items || []);
+  const sellable = invArr.filter(i => !i.equipped && i.type !== 'material');
 
   const desc = sellable.length === 0
     ? '*Você não tem itens vendáveis. Itens equipados e materiais não podem ser vendidos.*'
@@ -163,12 +164,13 @@ export async function handleBlackMarket(interaction, parsed) {
 
   if (action === 'sell_pick' && interaction.isStringSelectMenu()) {
     const itemName = interaction.values[0];
-    let priceHint = '';
-    try {
-      const jwt = await getUserJwt(user);
-      const info = await apiGet(`/api/market/item-info/${encodeURIComponent(itemName)}`, { jwt });
-      if (info && !info.unknown) priceHint = `${info.minPrice}–${info.maxPrice}`;
-    } catch { /* segue sem hint */ }
+    // Um modal precisa ser a 1ª resposta dentro da janela de ~3s do Discord, então
+    // NÃO fazemos fetch de preço aqui (poderia estourar o tempo num backend lento).
+    // Usa hint já em cache, se houver; caso contrário, abre o modal sem hint.
+    const cachedInfo = peek(`iteminfo:${itemName}`);
+    const priceHint = cachedInfo && !cachedInfo.unknown
+      ? `${cachedInfo.minPrice}–${cachedInfo.maxPrice}`
+      : '';
 
     await interaction.showModal(textModal({
       section: 'blackmarket',

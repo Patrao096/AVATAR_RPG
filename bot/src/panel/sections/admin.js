@@ -172,8 +172,8 @@ export async function handleAdmin(interaction, parsed) {
   if (action === 'give_yuan_submit' && interaction.isModalSubmit()) {
     const targetDiscordId = extra;
     const amount = parseInt(interaction.fields.getTextInputValue('amount').trim(), 10);
-    if (!Number.isFinite(amount) || amount === 0) {
-      await interaction.reply(errorReply('Valor inválido.'));
+    if (!Number.isFinite(amount) || amount <= 0) {
+      await interaction.reply(errorReply('Valor inválido. Informe um número positivo.'));
       return;
     }
     await interaction.deferUpdate();

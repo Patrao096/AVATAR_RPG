@@ -701,16 +701,16 @@ function StoryBattleScreen({ battle, onEnd, onClose }) {
     setResult(won ? 'win' : 'lose');
   };
 
-  const myHp = state?.me.hp ?? battle.player.hp;
-  const myMaxHp = state?.me.maxHp ?? battle.player.maxHp;
-  const myChi = state?.me.chi ?? battle.player.chi;
-  const myMaxChi = state?.me.maxChi ?? battle.player.maxChi;
-  const oppHp = state?.opponent.hp ?? battle.opponent.maxHp;
-  const oppMaxHp = state?.opponent.maxHp ?? battle.opponent.maxHp;
-  const myConsumables = state?.me.consumables || [];
-  const myBuffs = state?.me.buffs || [];
-  const myStatus = state?.me.statusEffects || [];
-  const oppStatus = state?.opponent.statusEffects || [];
+  const myHp = state?.me?.hp ?? battle.player.hp;
+  const myMaxHp = state?.me?.maxHp ?? battle.player.maxHp;
+  const myChi = state?.me?.chi ?? battle.player.chi;
+  const myMaxChi = state?.me?.maxChi ?? battle.player.maxChi;
+  const oppHp = state?.opponent?.hp ?? battle.opponent.maxHp;
+  const oppMaxHp = state?.opponent?.maxHp ?? battle.opponent.maxHp;
+  const myConsumables = state?.me?.consumables || [];
+  const myBuffs = state?.me?.buffs || [];
+  const myStatus = state?.me?.statusEffects || [];
+  const oppStatus = state?.opponent?.statusEffects || [];
 
   return (
     <div className="lg:ml-56 pt-16 lg:pt-0 pb-24 lg:pb-0 min-h-screen">

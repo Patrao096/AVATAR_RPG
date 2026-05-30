@@ -24,6 +24,16 @@ export async function cached(key, fetcher, ttlMs = CONFIG.CACHE_TTL_MS) {
   return value;
 }
 
+/**
+ * Lê o valor já cacheado sem disparar fetch. Retorna undefined se ausente/expirado.
+ * Útil quando precisamos responder rápido (ex.: showModal dentro da janela de 3s).
+ */
+export function peek(key) {
+  const hit = _cache.get(key);
+  if (hit && hit.expiresAt > Date.now()) return hit.value;
+  return undefined;
+}
+
 export function invalidate(keyOrPrefix) {
   // Se termina com `:*`, invalida tudo que começa com o prefixo
   if (keyOrPrefix.endsWith(':*')) {

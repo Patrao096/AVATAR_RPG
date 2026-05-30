@@ -23,9 +23,20 @@ export async function buildHomePayload(discordUser) {
     console.warn('[home] ensureUser falhou (continuando):', err.message);
   }
 
-  const snapshot = await cached(`snapshot:${userId}`, () =>
-    getSnapshot(userId, ['perfil', 'saldo', 'cla', 'assinatura']),
-  );
+  let snapshot;
+  try {
+    snapshot = await cached(`snapshot:${userId}`, () =>
+      getSnapshot(userId, ['perfil', 'saldo', 'cla', 'assinatura']),
+    );
+  } catch (err) {
+    console.warn('[home] getSnapshot falhou:', err.message);
+    return {
+      content: '⚠️ Não consegui falar com o servidor agora. Tente de novo em instantes.',
+      embeds: [],
+      components: [navSelectRow(userId, 'home')],
+      flags: MessageFlags.Ephemeral,
+    };
+  }
 
   let saldo = snapshot.saldo;
   try { saldo = await getSaldo(userId); } catch { /* mantém cache */ }

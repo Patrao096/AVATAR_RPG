@@ -144,8 +144,8 @@ export default function Quests() {
             <div className="space-y-3 stagger">
               {active.map(q => {
                 const [label, cls] = TYPE_TAG[q.type] || ['Missão', 'bg-zinc-700 text-zinc-300'];
-                const pct = Math.round((q.progress / q.maxProgress) * 100);
-                const done = q.progress >= q.maxProgress;
+                const pct = q.maxProgress > 0 ? Math.min(100, Math.round((q.progress / q.maxProgress) * 100)) : 0;
+                const done = q.maxProgress > 0 && q.progress >= q.maxProgress;
                 const remainingMs = q.expiresAt ? new Date(q.expiresAt).getTime() - now : null;
                 const expired = remainingMs != null && remainingMs <= 0;
                 const urgent = remainingMs != null && remainingMs > 0 && remainingMs < 2 * 60 * 60 * 1000;

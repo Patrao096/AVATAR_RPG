@@ -1,11 +1,11 @@
+import { Navigate } from 'react-router-dom';
 import DiscordLinks from '../components/DiscordLinks';
 
 const API = window.__API_URL__ || 'http://localhost:5000';
 
 export default function Home({ user }) {
   if (user) {
-    window.location.href = '/profile';
-    return null;
+    return <Navigate to="/profile" replace />;
   }
 
   return (

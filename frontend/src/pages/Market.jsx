@@ -727,7 +727,7 @@ function YuanStoreSub() {
         <>
           <h3 className="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2 mt-4">🎯 Skill do dia</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
-            {skills.map(p => <ProductCard key={p.dailyId} product={p} buying={buying} buy={buy} qty={1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
+            {skills.map(p => <ProductCard key={p.dailyId} product={p} money={data.characterMoney} buying={buying} buy={buy} qty={1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
           </div>
         </>
       )}
@@ -737,7 +737,7 @@ function YuanStoreSub() {
         <>
           <h3 className="text-xs font-bold text-teal-400 uppercase tracking-wider mb-2 mt-4">⚔️ Itens do dia</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
-            {items.map(p => <ProductCard key={p.dailyId} product={p} buying={buying} buy={buy} qty={quantities[p.dailyId] || 1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
+            {items.map(p => <ProductCard key={p.dailyId} product={p} money={data.characterMoney} buying={buying} buy={buy} qty={quantities[p.dailyId] || 1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
           </div>
         </>
       )}
@@ -747,7 +747,7 @@ function YuanStoreSub() {
         <>
           <h3 className="text-xs font-bold text-pink-400 uppercase tracking-wider mb-2 mt-4">🧪 Poções do dia</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {potions.map(p => <ProductCard key={p.dailyId} product={p} buying={buying} buy={buy} qty={quantities[p.dailyId] || 1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
+            {potions.map(p => <ProductCard key={p.dailyId} product={p} money={data.characterMoney} buying={buying} buy={buy} qty={quantities[p.dailyId] || 1} setQty={setQty} rarityClass={RARITY_COLOR[p.rarity] || RARITY_COLOR.common} />)}
           </div>
         </>
       )}
@@ -755,14 +755,14 @@ function YuanStoreSub() {
   );
 }
 
-function ProductCard({ product, buying, buy, qty, setQty, rarityClass }) {
+function ProductCard({ product, money, buying, buy, qty, setQty, rarityClass }) {
   const isSkill = product.type === 'skill';
   const isPotion = product.type === 'consumable';
   const totalPrice = product.priceYuan * (isSkill ? 1 : qty);
-  const affordable = product.canAfford && totalPrice <= (product.canAfford ? Infinity : 0);
+  const affordable = money == null || money >= totalPrice;
   const owned = isSkill && product.alreadyOwned;
   const meetsLevel = product.meetsLevel;
-  const disabled = buying === product.dailyId || !meetsLevel || owned;
+  const disabled = buying === product.dailyId || !meetsLevel || owned || !affordable;
 
   return (
     <div className={`bg-zinc-900 border-2 rounded-xl p-4 transition-all ${rarityClass} ${owned ? 'opacity-60' : ''}`}>
@@ -849,6 +849,7 @@ function ProductCard({ product, buying, buy, qty, setQty, rarityClass }) {
           {buying === product.dailyId ? '⏳' :
            owned ? 'Já possuo' :
            !meetsLevel ? `Lv. ${product.minLevel}` :
+           !affordable ? 'Sem Yuan' :
            'Comprar'}
         </button>
       </div>

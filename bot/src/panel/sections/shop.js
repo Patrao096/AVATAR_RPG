@@ -5,7 +5,7 @@ import {
 } from '../builders.js';
 import { ELEMENT_ICON } from '../../config.js';
 import { apiGet, apiPost, getUserJwt } from '../../api.js';
-import { cached, invalidate } from '../../cache.js';
+import { cached, invalidate, peek } from '../../cache.js';
 
 const TYPE_LABEL = {
   skill: '🎯 Skill',
@@ -89,17 +89,16 @@ export async function handleShop(interaction, parsed) {
   if (action === 'pick' && interaction.isStringSelectMenu()) {
     const [dailyId, type] = interaction.values[0].split(':');
 
-    const data = await cached(`shop:${interaction.user.id}`, async () => {
-      const jwt = await getUserJwt(interaction.user);
-      return apiGet('/api/yuanstore/today', { jwt });
-    });
-    const product = (data.products || []).find(p => String(p.dailyId) === String(dailyId));
-
     if (type === 'skill') {
       await interaction.deferUpdate();
       await doBuy(interaction, { dailyId, type, quantity: 1 });
       return;
     }
+
+    // Lê o nome do produto só do que já está em cache — NUNCA dispara fetch aqui,
+    // pois um modal precisa ser a 1ª resposta dentro da janela de ~3s do Discord.
+    const cachedShop = peek(`shop:${interaction.user.id}`);
+    const product = (cachedShop?.products || []).find(p => String(p.dailyId) === String(dailyId));
 
     await interaction.showModal(textModal({
       section: 'shop',

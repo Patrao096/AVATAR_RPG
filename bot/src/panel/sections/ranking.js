@@ -43,7 +43,7 @@ async function buildPlayersRanking(discordUser) {
     }).join('\n\n');
   }
 
-  const me = ranking.find(r => r.discordId === discordUser.id || r.discordUsername === discordUser.username);
+  const me = ranking.find(r => r.discordId === discordUser.id);
   if (me) desc += `\n\n📍 Sua posição: **#${ranking.indexOf(me) + 1}**`;
 
   const embed = baseEmbed({

@@ -29,12 +29,14 @@ export function parse(customId) {
   const parts = customId.split(':');
   if (parts.length < 5) return null;
   const [, section, action, userId, ts, ...rest] = parts;
+  const tsNum = parseInt(ts, 36);
+  if (!Number.isFinite(tsNum)) return null;
   return {
     kind,
     section,
     action,
     userId,
-    ts: parseInt(ts, 36),
+    ts: tsNum,
     extra: rest.length > 0 ? rest.join(':') : null,
   };
 }
