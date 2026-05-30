@@ -1,0 +1,312 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+body {
+  background: #09090b;
+  color: #f4f4f5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ─── Atmospheric ambient glows (subtle, doesn't change colors) ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(45, 212, 191, 0.05), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(168, 85, 247, 0.04), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* All content sits above the ambient layer */
+body > #root { position: relative; z-index: 1; }
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+/* Hide scrollbar utility */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ═════════════════════════════════════════
+   ANIMATIONS — gives life without changing the look
+   ════════════════════════════════════════ */
+
+/* Spinning ring — used on avatar, important elements */
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 16s linear infinite; }
+
+/* Shimmer overlay — for EXP/HP bars */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+.bar-shimmer { position: relative; overflow: hidden; }
+.bar-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%);
+  animation: shimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pulse ring — used on important active items (current chapter, urgent notifications) */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+.pulse-ring { position: relative; }
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  animation: pulse-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Live dot — pulsing online indicator */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #2dd4bf;
+  border-radius: 50%;
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+/* Card hover lift — tactile feel */
+.lift {
+  transition: transform 220ms cubic-bezier(.2, .8, .2, 1), border-color 220ms ease, box-shadow 220ms ease;
+}
+.lift:hover { transform: translateY(-2px); }
+.lift:active { transform: translateY(0) scale(0.98); }
+
+/* Stagger entry — cards appear in sequence */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: rise 380ms forwards;
+}
+.stagger > *:nth-child(1) { animation-delay: 30ms; }
+.stagger > *:nth-child(2) { animation-delay: 70ms; }
+.stagger > *:nth-child(3) { animation-delay: 110ms; }
+.stagger > *:nth-child(4) { animation-delay: 150ms; }
+.stagger > *:nth-child(5) { animation-delay: 190ms; }
+.stagger > *:nth-child(6) { animation-delay: 230ms; }
+.stagger > *:nth-child(7) { animation-delay: 270ms; }
+.stagger > *:nth-child(8) { animation-delay: 310ms; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* Page transition */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.page-in { animation: page-in 280ms ease-out; }
+
+/* Sliding tab pill */
+.tab-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: rgba(45, 212, 191, 0.15);
+  border: 1px solid rgba(45, 212, 191, 0.25);
+  border-radius: 9999px;
+  transition: all 280ms cubic-bezier(.2, .8, .2, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Avatar elemental ring */
+.avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed rgba(45, 212, 191, 0.45);
+  border-radius: 50%;
+  animation: spin-slow 16s linear infinite;
+  pointer-events: none;
+}
+.avatar-ring-2 {
+  position: absolute;
+  inset: -10px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 50%;
+  animation: spin-slow 28s linear infinite reverse;
+  pointer-events: none;
+}
+
+/* Glow corner on hover for action cards */
+.glow-corner {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+.lift:hover .glow-corner {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* ─── Mobile-only safe-area for bottom nav ─── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe { padding-bottom: calc(0.5rem + env(safe-area-inset-bottom)); }
+}
+
+/* Touch-friendly focus rings */
+button:focus-visible, a:focus-visible {
+  outline: 2px solid rgba(45, 212, 191, 0.6);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Disable iOS text size adjust */
+html { -webkit-text-size-adjust: 100%; }
+
+/* Prevent zoom on input focus on iOS */
+input, select, textarea { font-size: 16px; }
+@media (min-width: 640px) {
+  input, select, textarea { font-size: 14px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* v6.3 — Animações de batalha + toasts + skeletons                 */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Toast slide-in */
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(100%) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+.toast-enter {
+  animation: toast-slide-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+    rgba(63, 63, 70, 0.4) 0%,
+    rgba(82, 82, 91, 0.7) 50%,
+    rgba(63, 63, 70, 0.4) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+/* ─── Batalha: flash de crítico ─── */
+@keyframes crit-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+  30%  { box-shadow: 0 0 30px 10px rgba(250, 204, 21, 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+}
+.crit-flash {
+  animation: crit-flash 600ms ease-out;
+}
+
+/* ─── Batalha: shake quando recebe dano forte ─── */
+@keyframes screen-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+  20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+.shake {
+  animation: screen-shake 400ms ease-out;
+}
+
+/* ─── Batalha: shake mais forte (crit) ─── */
+@keyframes screen-shake-hard {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  10% { transform: translateX(-5px) translateY(-2px); }
+  20% { transform: translateX(5px) translateY(2px); }
+  30% { transform: translateX(-4px) translateY(-1px); }
+  40% { transform: translateX(4px) translateY(1px); }
+  50% { transform: translateX(-3px) translateY(-1px); }
+  60% { transform: translateX(3px) translateY(1px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+.shake-hard {
+  animation: screen-shake-hard 600ms ease-out;
+}
+
+/* ─── Batalha: glow pulsante no avatar do turno atual ─── */
+@keyframes turn-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.5); }
+  50%      { box-shadow: 0 0 25px 5px rgba(45, 212, 191, 0.4); }
+}
+.turn-active {
+  animation: turn-glow 2s ease-in-out infinite;
+}
+
+/* Glow vermelho pra oponente */
+@keyframes turn-glow-enemy {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5); }
+  50%      { box-shadow: 0 0 25px 5px rgba(248, 113, 113, 0.4); }
+}
+.turn-active-enemy {
+  animation: turn-glow-enemy 2s ease-in-out infinite;
+}
+
+/* ─── Batalha: dano flutuante (números que sobem) ─── */
+@keyframes float-damage {
+  0%   { opacity: 0; transform: translateY(0) scale(0.8); }
+  20%  { opacity: 1; transform: translateY(-15px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1); }
+}
+.float-damage {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 900;
+  font-size: 1.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  animation: float-damage 1.2s ease-out forwards;
+  z-index: 10;
+}
+
+/* ─── Barra de HP com transição suave ─── */
+/* v6.4 — Reduzida de 600ms p/ 250ms: evita sensação de "barra atrasada" em PvP */
+.hp-bar-smooth {
+  transition: width 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ─── Mobile: scroll horizontal sem scrollbar visível (tabs) ─── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Mobile: modais que ocupam tela cheia em < 640px ─── */
+@media (max-width: 639px) {
+  .modal-mobile-fullscreen { max-height: 100vh !important; height: 100vh; border-radius: 0 !important; }
+}
+
+
+/* Scrollbar pequena pras tabs do admin (em vez de no-scrollbar) */
+.scrollbar-thin::-webkit-scrollbar { height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 2px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+.scrollbar-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) rgba(255,255,255,0.03); }
+
