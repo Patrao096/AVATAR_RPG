@@ -18,6 +18,8 @@ import {
   createBattle as createBattleState,
   getBattleState,
   endBattleState,
+  getOutcome,
+  getSideForUser,
 } from '../lib/battle-state.js';
 import { getClanStoryReward } from '../lib/items-lookup.js';
 
@@ -505,10 +507,19 @@ router.post('/start-battle', authMiddleware, async (req, res) => {
 
 // POST /api/story/finish-battle
 router.post('/finish-battle', authMiddleware, async (req, res) => {
-  const { battleId, chapter, scene, won } = req.body;
+  const { battleId, chapter, scene } = req.body;
+  let { won } = req.body;
   try {
     const character = await prisma.character.findUnique({ where: { userId: req.userId } });
     if (!character) return res.status(404).json({ error: 'Personagem não encontrado' });
+
+    // Anti-cheat: se a batalha ainda tem estado, deriva o resultado do servidor
+    // (impede mandar won:true sem ter vencido de fato).
+    const outcome = getOutcome(battleId);
+    if (outcome) {
+      const mySide = getSideForUser(battleId, req.userId);
+      if (mySide) won = outcome === mySide;
+    }
 
     const chapterData = STORY[chapter];
     if (!chapterData) return res.status(400).json({ error: 'Capítulo inválido' });

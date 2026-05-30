@@ -46,7 +46,14 @@ async function createNewRotation() {
   const yuan = pool.filter(i => i.type === 'yuan');
   const cosmetic = pool.filter(i => i.type === 'cosmetic');
 
-  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+  const shuffle = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
 
   // Seleção: 3 lendárias + 3 épicas + 3 raras + yuan packages + 1 cosmético
   const selected = [

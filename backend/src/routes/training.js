@@ -638,6 +638,10 @@ router.post('/end', authMiddleware, async (req, res) => {
     const state = getBattleState(battleId);
     if (!state || !state.isTraining) return res.status(400).json({ error: 'Não é treino' });
 
+    // Idempotência: a state vive 60s após o fim — não premia 2x.
+    if (state._endSettled) return res.status(409).json({ error: 'Treino já finalizado.' });
+    state._endSettled = true;
+
     const character = await prisma.character.findUnique({ where: { userId: req.userId } });
     if (!character) return res.status(404).json({ error: 'Personagem não encontrado' });
 
@@ -645,7 +649,10 @@ router.post('/end', authMiddleware, async (req, res) => {
     const boss = getBossById(bossId);
     if (!boss) return res.status(400).json({ error: 'Boss inválido' });
 
-    const won = result === 'win';
+    // Anti-cheat: deriva o resultado do estado do servidor, não do cliente.
+    const mySide = getSideForUser(battleId, req.userId);
+    const outcome = getOutcome(battleId);
+    const won = outcome ? outcome === mySide : result === 'win';
     let rewards = { exp: 0, yuan: 0, decayFactor: 0, isFirstWin: false, isMilestone: false };
     let progression = null;
 

@@ -131,17 +131,22 @@ router.post('/craft', authMiddleware, async (req, res) => {
     }
 
     await prisma.$transaction(async (tx) => {
+      // Consumo condicional: cada decremento só passa se ainda houver estoque,
+      // impedindo craftar 2x com os mesmos ingredientes em chamadas concorrentes.
       for (const [itemName, qty] of Object.entries(required)) {
         const item = character.inventory.find(i => i.itemName === itemName);
-        await tx.inventoryItem.update({
-          where: { id: item.id },
+        const dec = await tx.inventoryItem.updateMany({
+          where: { id: item.id, quantity: { gte: qty } },
           data: { quantity: { decrement: qty } },
         });
+        if (dec.count !== 1) throw new Error('INSUFFICIENT_ITEMS');
       }
-      await tx.character.update({
-        where: { id: character.id },
+      const debited = await tx.character.updateMany({
+        where: { id: character.id, money: { gte: recipe.requiredYuan } },
         data: { money: { decrement: recipe.requiredYuan } },
       });
+      if (debited.count !== 1) throw new Error('INSUFFICIENT_FUNDS');
+
       await tx.inventoryItem.create({
         data: { characterId: character.id, itemName: recipe.resultItem, quantity: 1 },
       });
@@ -149,6 +154,12 @@ router.post('/craft', authMiddleware, async (req, res) => {
 
     res.json({ success: true, item: recipe.resultItem });
   } catch (error) {
+    if (error.message === 'INSUFFICIENT_ITEMS') {
+      return res.status(400).json({ error: 'Ingredientes insuficientes' });
+    }
+    if (error.message === 'INSUFFICIENT_FUNDS') {
+      return res.status(400).json({ error: 'Yuan insuficiente' });
+    }
     console.error('craft/craft:', error);
     res.status(500).json({ error: 'Erro ao craftar item' });
   }

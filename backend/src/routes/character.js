@@ -85,9 +85,12 @@ router.get('/ranking', async (req, res) => {
 
 // PATCH /api/character/me
 router.patch('/me', authMiddleware, async (req, res) => {
-  const { name } = req.body;
-  if (!name || name.length < 3) {
-    return res.status(400).json({ error: 'Nome inválido (mín. 3 caracteres)' });
+  const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
+  if (name.length < 3 || name.length > 24) {
+    return res.status(400).json({ error: 'Nome inválido (3 a 24 caracteres)' });
+  }
+  if (!/^[a-zA-ZÀ-ÿ0-9 _-]+$/.test(name)) {
+    return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
   }
   try {
     const character = await prisma.character.update({

@@ -112,7 +112,14 @@ router.post('/force-daily-refresh', adminMiddleware, async (req, res) => {
       s.path !== null && s.tier <= 3 && s.tier >= 1,
     );
 
-    const pickRandom = (arr, n) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
+    const pickRandom = (arr, n) => {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a.slice(0, n);
+    };
 
     const pickedSkill = pickRandom(allSkills, 1)[0];
     const pickedItems = pickRandom(equipables, 3);
@@ -396,8 +403,12 @@ router.post('/reset-all', adminMiddleware, async (req, res) => {
       // Helpers do yuanstore (reproduzimos aqui pq não estão exportados):
       const todayDateString = () => new Date().toISOString().split('T')[0];
       const pickRandom = (arr, n) => {
-        const shuffled = [...arr].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, n);
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a.slice(0, n);
       };
 
       const allItems = getAllItems();
@@ -598,9 +609,16 @@ router.post('/quests', adminMiddleware, async (req, res) => {
 
 router.patch('/quests/:id', adminMiddleware, async (req, res) => {
   try {
-    const data = { ...req.body };
-    // sanitize
-    delete data.id; delete data.createdBy; delete data.createdAt;
+    // Whitelist explícita: nunca espalhe req.body direto no update (mass-assignment).
+    const ALLOWED = [
+      'title', 'description', 'type', 'element', 'icon',
+      'minLevel', 'maxLevel', 'maxProgress', 'rewardExp', 'rewardYuan',
+      'rewardItem', 'durationHours', 'isActive',
+    ];
+    const data = {};
+    for (const k of ALLOWED) {
+      if (req.body[k] !== undefined) data[k] = req.body[k];
+    }
     if (data.minLevel != null)      data.minLevel      = parseInt(data.minLevel);
     if (data.maxLevel != null)      data.maxLevel      = parseInt(data.maxLevel);
     if (data.maxProgress != null)   data.maxProgress   = parseInt(data.maxProgress);

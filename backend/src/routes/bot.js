@@ -250,12 +250,22 @@ router.post('/transfer', async (req, res) => {
   const token = authHeader?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
+  let decoded;
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const { targetDiscordId, amount } = req.body;
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (error) {
+    return res.status(403).json({ error: 'Token inválido' });
+  }
 
-    if (!targetDiscordId || !amount || amount < 1) {
+  try {
+    const { targetDiscordId } = req.body;
+    const amount = parseInt(req.body.amount, 10);
+
+    if (!targetDiscordId || !Number.isInteger(amount) || amount < 1) {
       return res.status(400).json({ error: 'Dados inválidos' });
+    }
+    if (decoded.discordId === targetDiscordId) {
+      return res.status(400).json({ error: 'Você não pode transferir para si mesmo' });
     }
 
     const targetUser = await prisma.user.findUnique({ where: { discordId: targetDiscordId } });
@@ -270,14 +280,23 @@ router.post('/transfer', async (req, res) => {
     if (!receiverChar) return res.status(404).json({ error: 'Destinatário não tem personagem' });
     if (senderChar.money < amount) return res.status(400).json({ error: 'Yuan insuficiente' });
 
-    await prisma.$transaction([
-      prisma.character.update({ where: { id: senderChar.id }, data: { money: { decrement: amount } } }),
-      prisma.character.update({ where: { id: receiverChar.id }, data: { money: { increment: amount } } }),
-    ]);
+    await prisma.$transaction(async (tx) => {
+      // Débito condicional: evita saldo negativo em transferências concorrentes.
+      const debited = await tx.character.updateMany({
+        where: { id: senderChar.id, money: { gte: amount } },
+        data: { money: { decrement: amount } },
+      });
+      if (debited.count !== 1) throw new Error('INSUFFICIENT_FUNDS');
+      await tx.character.update({ where: { id: receiverChar.id }, data: { money: { increment: amount } } });
+    });
 
     res.json({ success: true });
   } catch (error) {
-    res.status(403).json({ error: 'Token inválido' });
+    if (error.message === 'INSUFFICIENT_FUNDS') {
+      return res.status(400).json({ error: 'Yuan insuficiente' });
+    }
+    console.error('bot/transfer:', error);
+    res.status(500).json({ error: 'Erro ao transferir' });
   }
 });
 

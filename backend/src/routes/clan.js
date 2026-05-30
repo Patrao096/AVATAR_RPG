@@ -789,23 +789,29 @@ router.post('/treasury/deposit', authMiddleware, async (req, res) => {
     const character = await prisma.character.findUnique({ where: { userId: req.userId } });
     if (character.money < amount) return res.status(400).json({ error: 'Yuan insuficiente' });
 
-    await prisma.$transaction([
-      prisma.character.update({
-        where: { id: character.id },
+    await prisma.$transaction(async (tx) => {
+      // Débito condicional: evita saldo negativo em depósitos concorrentes.
+      const debited = await tx.character.updateMany({
+        where: { id: character.id, money: { gte: amount } },
         data: { money: { decrement: amount } },
-      }),
-      prisma.clan.update({
+      });
+      if (debited.count !== 1) throw new Error('INSUFFICIENT_FUNDS');
+
+      await tx.clan.update({
         where: { id: member.clanId },
         data: { treasury: { increment: amount } },
-      }),
-      prisma.clanMember.update({
+      });
+      await tx.clanMember.update({
         where: { id: member.id },
         data: { contributedYuan: { increment: amount } },
-      }),
-    ]);
+      });
+    });
 
     res.json({ success: true, message: `Depositou ${amount} Yuan no baú` });
   } catch (error) {
+    if (error.message === 'INSUFFICIENT_FUNDS') {
+      return res.status(400).json({ error: 'Yuan insuficiente' });
+    }
     console.error('clan/treasury/deposit:', error);
     res.status(500).json({ error: 'Erro' });
   }
@@ -822,19 +828,26 @@ router.post('/treasury/withdraw', authMiddleware, async (req, res) => {
     const clan = await prisma.clan.findUnique({ where: { id: member.clanId } });
     if (clan.treasury < amount) return res.status(400).json({ error: 'Baú não tem Yuan suficiente' });
 
-    await prisma.$transaction([
-      prisma.clan.update({
-        where: { id: member.clanId },
+    await prisma.$transaction(async (tx) => {
+      // Saque condicional: evita baú negativo em saques concorrentes.
+      const debited = await tx.clan.updateMany({
+        where: { id: member.clanId, treasury: { gte: amount } },
         data: { treasury: { decrement: amount } },
-      }),
-      prisma.character.update({
+      });
+      if (debited.count !== 1) throw new Error('INSUFFICIENT_TREASURY');
+
+      await tx.character.update({
         where: { userId: req.userId },
         data: { money: { increment: amount } },
-      }),
-    ]);
+      });
+    });
 
     res.json({ success: true, message: `Sacou ${amount} Yuan` });
   } catch (error) {
+    if (error.message === 'INSUFFICIENT_TREASURY') {
+      return res.status(400).json({ error: 'Baú não tem Yuan suficiente' });
+    }
+    console.error('clan/treasury/withdraw:', error);
     res.status(500).json({ error: 'Erro' });
   }
 });
